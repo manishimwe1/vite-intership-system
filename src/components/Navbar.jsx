@@ -1,6 +1,10 @@
 import { Bell, Mail, MessageSquare, User } from "lucide-react";
+import { useAuth } from "../hooks/useAuth";
 
 const NavBar = () => {
+  const { user } = useAuth();
+  console.log({user});
+  
   return (
     <header className="p-6 sticky w-full z-10">
       <nav className="flex items-center justify-between gap-2">
@@ -15,7 +19,17 @@ const NavBar = () => {
             <Bell className="size-3" />
           </div>
         </div>
-        <div>user</div>
+        <div>
+          {/* {user ? (
+            <div className="flex items-center gap-2">
+              <p>{user.name || user.email}</p>
+              <button onClick={signOut}>Sign out</button>
+            </div>
+          ) : (
+            <button onClick={signInWithGoogle}>Sign in</button>
+          )} */}
+          user
+        </div>
       </nav>
     </header>
   );

@@ -1,6 +1,8 @@
 
 
 import React, { useState } from "react";
+import RightPanel from "../components/RightPanel";
+import HeroBanner from "../components/HeroBanner";
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 const GridIcon = () => (
@@ -191,36 +193,14 @@ const mentors = [
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
 export default function HomePage() {
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden font-sans">
+    <div className="flex h-screen  bg-red-50 overflow-hidden font-sans">
 
       {/* ── Main Content ── */}
       <div className="flex-1 flex overflow-hidden">
-        <main className="flex-1 overflow-y-auto px-7 py-6">
+        <main className="flex-1 overflow-y-auto px-7 pt-6 py-30">
 
           {/* Hero Banner */}
-          <div className="relative rounded-3xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-500 p-8 mb-5 overflow-hidden">
-            {/* Decorative sparkles */}
-            <div className="absolute right-12 top-1/2 -translate-y-1/2 opacity-20">
-              <svg viewBox="0 0 200 200" className="w-48 h-48 text-white" fill="currentColor">
-                <path d="M100 0 L110 90 L200 100 L110 110 L100 200 L90 110 L0 100 L90 90 Z" />
-              </svg>
-            </div>
-            <div className="absolute right-36 top-8 opacity-10">
-              <svg viewBox="0 0 100 100" className="w-16 h-16 text-white" fill="currentColor">
-                <path d="M50 0 L55 45 L100 50 L55 55 L50 100 L45 55 L0 50 L45 45 Z" />
-              </svg>
-            </div>
-            <p className="text-indigo-200 text-xs font-semibold tracking-widest uppercase mb-3">Online Course</p>
-            <h1 className="text-white text-2xl font-extrabold leading-tight max-w-xs mb-6">
-              Sharpen Your Skills with Professional Online Courses
-            </h1>
-            <button className="flex items-center gap-2 bg-gray-900 text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-gray-700 transition-colors shadow-lg">
-              Join Now
-              <span className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">
-                <ChevronRight />
-              </span>
-            </button>
-          </div>
+          <HeroBanner/>
 
           {/* Course Progress Cards */}
           <div className="flex gap-4 mb-6">
@@ -245,72 +225,7 @@ export default function HomePage() {
         </main>
 
         {/* ── Right Panel ── */}
-        <aside className="w-72 shrink-0 overflow-y-auto px-5 py-6 border-l border-gray-100 bg-white">
-
-          {/* Statistics */}
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base font-bold text-gray-900">Statistic</h3>
-            <button className="text-gray-300 hover:text-gray-500"><DotsIcon /></button>
-          </div>
-
-          <CircularProgress pct={32} />
-
-          <div className="text-center mt-4 mb-1">
-            <p className="text-base font-bold text-gray-900">Good Morning Jason 🔥</p>
-            <p className="text-xs text-gray-400 mt-1">Continue your learning to achieve your target!</p>
-          </div>
-
-          {/* Y-axis labels + bar chart */}
-          <div className="mt-5 bg-gray-50 rounded-2xl p-4">
-            <div className="flex gap-2">
-              {/* Y labels */}
-              <div className="flex flex-col justify-between text-[10px] text-gray-400 h-20 pr-1 text-right">
-                <span>60</span><span>40</span><span>20</span>
-              </div>
-              <div className="flex-1">
-                <BarChart />
-              </div>
-            </div>
-          </div>
-
-          {/* Your Mentor */}
-          <div className="mt-6">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-base font-bold text-gray-900">Your mentor</h3>
-              <button className="w-6 h-6 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50 transition-colors">
-                <PlusIcon />
-              </button>
-            </div>
-            <div className="flex flex-col gap-3">
-              {mentors.map((m) => (
-                <div key={m.name} className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors cursor-pointer group">
-                  <div className={`w-10 h-10 ${m.color} rounded-xl flex items-center justify-center text-xl shrink-0`}>
-                    {m.emoji}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-gray-800 group-hover:text-indigo-600 transition-colors">{m.name}</p>
-                    <p className="text-xs text-gray-400">{m.role}</p>
-                  </div>
-                  <button className="ml-auto text-gray-200 hover:text-indigo-500 transition-colors">
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                    </svg>
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Upcoming Lessons hint */}
-          <div className="mt-6 p-4 rounded-2xl bg-indigo-50 border border-indigo-100">
-            <p className="text-xs font-semibold text-indigo-600 uppercase tracking-widest mb-1">Up Next</p>
-            <p className="text-sm font-bold text-gray-900">Color Theory Basics</p>
-            <p className="text-xs text-gray-400 mt-0.5">Branding module · 24 min</p>
-            <div className="mt-3 h-1 bg-indigo-100 rounded-full">
-              <div className="h-full w-0 bg-indigo-500 rounded-full" />
-            </div>
-          </div>
-        </aside>
+        <RightPanel mentors={mentors}/>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import HomePage from "./pages/homePage";
 import MainLayout from "./components/layout/mainLayout";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import StudentPage from "./pages/StudentPage";
+import SignInPage from "./pages/SignInPage";
 
 const App = () => {
   return (
@@ -11,6 +12,7 @@ const App = () => {
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/student" element={<StudentPage />} />
+          <Route path="/signin" element={<SignInPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

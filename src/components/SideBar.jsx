@@ -1,6 +1,6 @@
 
 
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const navItems = [
   {
@@ -8,7 +8,7 @@ const navItems = [
     link: "/",
     active: true,
     icon: (
-      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="eee">
         <rect x="3" y="3" width="7" height="7" rx="1" />
         <rect x="14" y="3" width="7" height="7" rx="1" />
         <rect x="3" y="14" width="7" height="7" rx="1" />
@@ -87,7 +87,7 @@ const navItems = [
 ];
 
 const SideBar = () => {
-//   const pathname = usePathname();
+  const pathname = useLocation();
 
   return (
     <div className="w-[220px] h-screen bg-white flex flex-col px-5 py-6 border-r border-gray-100 shadow-sm">
@@ -119,7 +119,7 @@ const SideBar = () => {
               key={item.label}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 w-full text-left
                 ${
-                  item.active
+                  item.link === pathname.pathname
                     ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
                     : "text-gray-500 hover:bg-gray-50 hover:text-gray-800"
                 }`}
