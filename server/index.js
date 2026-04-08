@@ -8,7 +8,6 @@ import User from "../src/database/models/User.js";
 import { connectDB } from "../src/database/db.js";
 import { fetch, Agent } from "undici";
 
-// ✅ Custom fetch with longer timeout
 const customFetch = (url, options) => {
   return fetch(url, {
     ...options,
@@ -23,8 +22,14 @@ const customFetch = (url, options) => {
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// ✅ Check these in your terminal after restarting — if any show ❌ your .env is not loading
+console.log("AUTH_URL    :", process.env.AUTH_URL);
+console.log("AUTH_SECRET :", process.env.AUTH_SECRET ? "✅ set" : "❌ missing");
+console.log("GOOGLE ID   :", process.env.GOOGLE_CLIENT_ID ? "✅ set" : "❌ missing");
+
 connectDB();
 
+app.use(express.json());
 app.set("trust proxy", true);
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 
@@ -46,7 +51,7 @@ app.use(
         token: "https://oauth2.googleapis.com/token",
         userinfo: "https://www.googleapis.com/oauth2/v3/userinfo",
         issuer: "https://accounts.google.com",
-        checks: ["none"], // ✅ disable pkce + state checks
+        checks: ["none"],
         [Symbol.for("auth.js.custom-fetch")]: customFetch,
       }),
       Credentials({
@@ -97,54 +102,51 @@ app.use(
         }
       },
     },
+
     pages: {
       signIn: "http://localhost:5173/signin",
     },
 
     callbacks: {
       async redirect({ url }) {
-        // Allow any localhost:5173 URL through
         if (url.startsWith("http://localhost:5173")) return url;
         return "http://localhost:5173";
       },
     },
+
     cookies: {
       pkceCodeVerifier: {
         name: "authjs.pkce.code_verifier",
-        options: {
-          httpOnly: true,
-          sameSite: "lax",
-          path: "/",
-          secure: false, // ✅ false for localhost
-          domain: "localhost",
-        },
+        options: { httpOnly: true, sameSite: "lax", path: "/", secure: false },
       },
       state: {
         name: "authjs.state",
-        options: {
-          httpOnly: true,
-          sameSite: "lax",
-          path: "/",
-          secure: false,
-          domain: "localhost",
-        },
+        options: { httpOnly: true, sameSite: "lax", path: "/", secure: false },
       },
       sessionToken: {
         name: "authjs.session-token",
-        options: {
-          httpOnly: true,
-          sameSite: "lax",
-          path: "/",
-          secure: false,
-          domain: "localhost",
-        },
+        options: { httpOnly: true, sameSite: "lax", path: "/", secure: false },
       },
     },
-
-    trustHost: true,
   }),
 );
 
+app.post("/api/register", async (req, res) => {
+  const { name, email, password } = req.body;
+  if (!name || !email || !password)
+    return res.status(400).json({ message: "All fields are required." });
+  try {
+    const existing = await User.findOne({ email });
+    if (existing)
+      return res.status(409).json({ message: "An account with this email already exists." });
+    await User.create({ name, email, password, provider: "credentials" });
+    return res.status(201).json({ message: "Account created successfully." });
+  } catch (err) {
+    console.error("❌ Register error:", err);
+    return res.status(500).json({ message: "Server error. Please try again." });
+  }
+});
+
 app.listen(PORT, "127.0.0.1", () =>
-  console.log(`Auth server running on :${PORT}`),
+  console.log(`✅ Auth server running on http://127.0.0.1:${PORT}`),
 );
