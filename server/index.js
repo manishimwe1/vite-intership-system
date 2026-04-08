@@ -21,17 +21,19 @@ const customFetch = (url, options) => {
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// ✅ Check these in your terminal after restarting — if any show ❌ your .env is not loading
-console.log("AUTH_URL    :", process.env.AUTH_URL);
-console.log("AUTH_SECRET :", process.env.AUTH_SECRET ? "✅ set" : "❌ missing");
-console.log("GOOGLE ID   :", process.env.GOOGLE_CLIENT_ID ? "✅ set" : "❌ missing");
-
 connectDB();
 
 app.use(express.json());
 app.set("trust proxy", true);
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+
+app.get("/", (req, res) => {
+  res.json({
+    sucess:true,
+    message:'api working correctly'
+  });
+});
+
 
 app.use(
   "/auth",
@@ -145,6 +147,19 @@ app.post("/api/register", async (req, res) => {
     console.error("❌ Register error:", err);
     return res.status(500).json({ message: "Server error. Please try again." });
   }
+});
+
+app.post("/api/students", async (req, res) => {
+  const { name, email, role, github, project } = req.body;
+  console.log({ name, email, role, github, project });
+  
+  // try{
+  //   const newStudent = await student.create({ name, email, role, github, project });
+
+
+  // }catch(error){
+  //   console.log(error);
+  // }
 });
 
 app.listen(PORT, "127.0.0.1", () =>

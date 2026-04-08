@@ -7,7 +7,7 @@ const MainLayout = () => {
   return (
     <div className="flex h-screen overflow-hidden">
       <SideBar/>
-      <main className="flex-1 ">
+      <main className="flex-1 overflow-y-scroll ">
         <NavBar />
         <Outlet/>
       </main>

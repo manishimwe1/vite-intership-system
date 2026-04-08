@@ -1,12 +1,12 @@
-import { getSession } from "@auth/express";
+// import { getSession } from "@auth/express";
 import { useState, useEffect } from "react";
 
 const REDIRECT_URL = import.meta.env.VITE_AUTH_REDIRECT_URL || "http://localhost:5173/dashboard";
 
 export function useAuth() {
   const [session, setSession] = useState(undefined);
-  const data = getSession();
-  console.log(data);
+  // const data = getSession();
+  // console.log(data);
   
   useEffect(() => {
     const loadSession = async () => {
