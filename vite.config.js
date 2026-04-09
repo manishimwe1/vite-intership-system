@@ -9,6 +9,11 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] }),
   ],
+   resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"), // ✅ THIS is what shadcn needs
+    },
+  },
   server: {
     proxy: {
       "/auth": {
