@@ -7,6 +7,7 @@ import "dotenv/config";
 import User from "../src/database/models/User.js";
 import { connectDB } from "../src/database/db.js";
 import { fetch, Agent } from "undici";
+import intern from "../src/database/models/intern.js";
 
 const customFetch = (url, options) => {
   return fetch(url, {
@@ -133,33 +134,126 @@ app.use(
   }),
 );
 
-app.post("/api/register", async (req, res) => {
-  const { name, email, password } = req.body;
-  if (!name || !email || !password)
-    return res.status(400).json({ message: "All fields are required." });
+app.post("/api/students", async (req, res) => {
   try {
-    const existing = await User.findOne({ email });
-    if (existing)
-      return res.status(409).json({ message: "An account with this email already exists." });
-    await User.create({ name, email, password, provider: "credentials" });
-    return res.status(201).json({ message: "Account created successfully." });
-  } catch (err) {
-    console.error("❌ Register error:", err);
-    return res.status(500).json({ message: "Server error. Please try again." });
+    const { name, email, role, github, project } = req.body;
+
+    // ✅ 1. Validation
+    if (!name || !email || !role) {
+      return res.status(400).json({
+        success: false,
+        message: "Name, email, and role are required",
+      });
+    }
+
+    // ✅ 2. Email format check (basic)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid email format",
+      });
+    }
+
+    // ✅ 3. Check if student already exists
+    const existingStudent = await intern.findOne({ email });
+    if (existingStudent) {
+      return res.status(409).json({
+        success: false,
+        message: "Intern with this email already exists",
+      });
+    }
+
+    // ✅ 4. Create student
+    const newStudent = await intern.create({
+      name,
+      email,
+      role,
+      github,
+      // project,
+    });
+
+    // ✅ 5. Success response
+    return res.status(201).json({
+      success: true,
+      message: "Intern created successfully",
+      data: newStudent,
+    });
+
+  } catch (error) {
+    console.error("❌ Create student error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 });
 
-app.post("/api/students", async (req, res) => {
-  const { name, email, role, github, project } = req.body;
-  console.log({ name, email, role, github, project });
+app.get("/api/students", async (req, res) => {
   
-  // try{
-  //   const newStudent = await student.create({ name, email, role, github, project });
+  try{
+    const allStudents = await intern.find();
 
+    return res.status(200).json({
+      success: true,
+      data: allStudents,
+    });
 
-  // }catch(error){
-  //   console.log(error);
-  // }
+  }catch(error){
+    throw new Error("Failed to fetch students");
+    console.log(error);
+  }
+});
+
+app.get("/api/students/:id", async (req, res) => {
+  
+  try{
+    const student = await intern.findById(req.params.id);
+
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: "Intern not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: student,
+    });
+
+  }catch(error){
+    throw new Error("Failed to fetch students");
+    console.log(error);
+  }
+});
+
+app.delete("/api/students/:id", async (req, res) => {
+  
+  try{
+  const student = await intern.findByIdAndDelete(req.params.id);
+
+  if (!student) {
+    return res.status(404).json({
+    success: false,
+    message: "Intern not found",
+    });
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: "Intern deleted successfully",
+    data: student,
+  });
+
+  }catch(error){
+  console.error("❌ Delete student error:", error);
+  return res.status(500).json({
+    success: false,
+    message: "Internal server error",
+  });
+  }
 });
 
 app.listen(PORT, "127.0.0.1", () =>

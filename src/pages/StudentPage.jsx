@@ -1,31 +1,37 @@
+import AddStudentDialog from "@/components/AddNewStudentPage";
 import React from "react";
-import { Link } from "react-router-dom";
-
-const interns = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "john@example.com",
-    role: "Frontend",
-    status: "Active",
-    github: "https://github.com/johndoe",
-    project: "Project Alpha"
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    email: "jane@example.com",
-    role: "Backend",
-    status: "Inactive",
-    github: "https://github.com/janesmith",
-    project: "Project Alpha"
-
-  },
-];
+import { useState } from "react";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { MoreVerticalIcon } from "lucide-react";
+// import DropDownIntern from "@/components/DropDownIntern";
+import { useNavigate } from "react-router-dom";
 
 const StudentPage = () => {
+  const [open, setOpen] = useState(false);
+  const [allInterns, setAllInterns] = useState();
+  const navigate = useNavigate();
 
- 
+  useState(() => {
+    const fetchInterns = async () => {
+      try {
+        const response = await fetch("/api/students");
+        const data = await response.json();
+        setAllInterns(data.data);
+      } catch (error) {
+        console.error("Error fetching interns:", error);
+      }
+    };
+
+    fetchInterns();
+  }, []);
 
   return (
     <div className="p-6">
@@ -33,61 +39,63 @@ const StudentPage = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Intern Management</h1>
 
-        <Link to={'/new'} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-          + Add Intern
-        </Link>
+        <AddStudentDialog open={open} setOpen={setOpen} />
       </div>
 
       {/* Table */}
       <div className="bg-white shadow-md rounded-xl overflow-hidden">
-        <table className="w-full text-left">
-          <thead className="bg-gray-100 text-gray-600 text-sm">
-            <tr>
-              <th className="p-4">Name</th>
-              <th className="p-4">Email</th>
-              <th className="p-4">Role</th>
-              <th className="p-4">Git Hub</th>
-              <th className="p-4">Project</th>
-              <th className="p-4">Status</th>
-              <th className="p-4 text-right">Actions</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {interns.map((intern) => (
-              <tr key={intern.id} className=" hover:bg-gray-50">
-                <td className="p-4">{intern.name}</td>
-                <td className="p-4">{intern.email}</td>
-                <td className="p-4">{intern.role}</td>
-                <td className="p-4">{intern.github}</td>
-                <td className="p-4">{intern.project}</td>
-                <td className="p-4">
-                  <span
-                    className={`px-2 py-1 rounded text-sm ${
-                      intern.status === "Active"
-                        ? "bg-green-100 text-green-600"
-                        : "bg-red-100 text-red-600"
-                    }`}
+        <Table>
+          <TableCaption>A list of your intern.</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-25">Name</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Role</TableHead>
+              <TableHead className="text-right">GitHub</TableHead>
+              <TableHead className="text-right"></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {allInterns?.map((intern) => (
+              <TableRow
+                key={intern._id || intern.id}
+                className="hover:bg-gray-50"
+              >
+                <TableCell
+                  className="font-medium capitalize"
+                  onClick={() =>
+                    navigate(`/students/${intern._id || intern.id}`)
+                  }
+                >
+                  {intern.name}
+                </TableCell>
+                <TableCell>{intern.email}</TableCell>
+                <TableCell>{intern.status || "Active"}</TableCell>
+                <TableCell>{intern.role}</TableCell>
+                <TableCell className="text-right">
+                  <a
+                    href={intern.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 hover:underline"
                   >
-                    {intern.status}
-                  </span>
-                </td>
-                <td className="p-4 text-right space-x-2">
-                  <button className="text-blue-600 hover:underline">
-                    Edit
-                  </button>
-                  <button className="text-red-600 hover:underline">
-                    Delete
-                  </button>
-                </td>
-              </tr>
+                    View GitHub
+                  </a>
+                </TableCell>
+                <TableCell className="text-right">
+                  {/* <DropDownIntern
+                    internId={intern._id || intern.id}
+                    onClick={(e) => e.stopPropagation()} // STOP ROW NAVIGATION
+                  /> */}
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
     </div>
   );
 };
 
 export default StudentPage;
-

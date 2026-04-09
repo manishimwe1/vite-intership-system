@@ -5,7 +5,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import StudentPage from "./pages/StudentPage";
 import SignInPage from "./pages/SignInPage";
 import RegisterPage from "./pages/RegisterPage";
-import AddNewStudentPage from "./pages/AddNewStudentPage";
+import AddNewStudentPage from "./components/AddNewStudentPage";
+import StudentIdPage from "./pages/StudentIdPage";
 
 const App = () => {
   return (
@@ -14,7 +15,7 @@ const App = () => {
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/student" element={<StudentPage />} />
-          <Route path="/new" element={<AddNewStudentPage />} />
+          <Route path="/students/:id" element={<StudentIdPage />} />
         </Route>
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/register" element={<RegisterPage />} />
