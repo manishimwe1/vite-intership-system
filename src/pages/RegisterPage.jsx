@@ -60,12 +60,12 @@ export default function RegisterPage() {
         }),
       });
 
-      if (signInRes.ok) {
-        navigate("/dashboard");
-      } else {
-        // Registration worked but auto-login failed — send to sign in
-        navigate("/signin");
-      }
+    if (signInRes.ok) {
+      navigate("/"); // Redirect to home/dashboard after successful registration
+    } else {
+      // Registration worked but auto-login failed — send to sign in
+      navigate("/signin");
+    }
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {

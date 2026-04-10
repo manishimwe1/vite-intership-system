@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import RightPanel from "../components/RightPanel";
 import HeroBanner from "../components/HeroBanner";
+import CoursesSection from "../components/CoursesSection";
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 const GridIcon = () => (
@@ -138,57 +139,7 @@ const courseCards = [
   { icon: "📅", iconBg: "bg-cyan-100",   iconColor: "text-cyan-500",   watched: 6, total: 12, label: "Front End" },
 ];
 
-const CourseCard = ({ icon, iconBg, iconColor, watched, total, label }) => (
-  <div className="flex-1 bg-white rounded-2xl px-4 py-3 flex items-center gap-3 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200">
-    <div className={`w-10 h-10 rounded-xl ${iconBg} flex items-center justify-center shrink-0`}>
-      <span className={`text-lg ${iconColor}`}>{icon}</span>
-    </div>
-    <div className="flex-1 min-w-0">
-      <p className="text-[10px] text-gray-400 font-medium">{watched}/{total} watched</p>
-      <p className="text-sm font-bold text-gray-800 truncate">{label}</p>
-      <div className="mt-1 h-1 bg-gray-100 rounded-full overflow-hidden">
-        <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${(watched / total) * 100}%` }} />
-      </div>
-    </div>
-    <button className="text-gray-300 hover:text-gray-500 shrink-0"><DotsIcon /></button>
-  </div>
-);
 
-// ─── Continue Watching Card ───────────────────────────────────────────────────
-const watchCards = [
-  { bg: "from-amber-400 to-orange-500",   emoji: "💻", title: "UI/UX Fundamentals",    progress: 25 },
-  { bg: "from-slate-400 to-slate-600",    emoji: "🎯", title: "Brand Strategy 101",    progress: 38 },
-  { bg: "from-indigo-400 to-purple-600",  emoji: "⚡", title: "Advanced Front End",    progress: 50 },
-];
-
-const WatchCard = ({ bg, emoji, title, progress }) => {
-  const [liked, setLiked] = useState(false);
-  return (
-    <div className="rounded-2xl overflow-hidden bg-white shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-200 group">
-      <div className={`relative h-36 bg-gradient-to-br ${bg} flex items-center justify-center`}>
-        <span className="text-5xl opacity-80">{emoji}</span>
-        <button onClick={() => setLiked(!liked)}
-          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center hover:bg-black/40 transition-colors">
-          <HeartIcon filled={liked} />
-        </button>
-        {/* Progress bar */}
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20">
-          <div className="h-full bg-white rounded-full" style={{ width: `${progress}%` }} />
-        </div>
-      </div>
-      <div className="p-3">
-        <p className="text-sm font-bold text-gray-800 group-hover:text-indigo-600 transition-colors">{title}</p>
-        <p className="text-xs text-gray-400 mt-0.5">{progress}% complete</p>
-      </div>
-    </div>
-  );
-};
-
-// ─── Mentor Card ─────────────────────────────────────────────────────────────
-const mentors = [
-  { name: "Alex Rivera",  role: "UX Expert",     emoji: "👨‍🎨", color: "bg-rose-100"   },
-  { name: "Sara Kim",     role: "Brand Strategist", emoji: "👩‍💼", color: "bg-amber-100" },
-];
 
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
 export default function HomePage() {
@@ -202,13 +153,8 @@ export default function HomePage() {
           {/* Hero Banner */}
           <HeroBanner/>
 
-          {/* Course Progress Cards */}
-          <div className="flex gap-4 mb-6">
-            {courseCards.map((c) => <CourseCard key={c.label} {...c} />)}
-          </div>
-
           {/* Continue Watching */}
-          <div className="flex items-center justify-between mb-4">
+          {/* <div className="flex items-center justify-between mb-4">
             <h2 className="text-base font-bold text-gray-900">Continue Watching</h2>
             <div className="flex gap-2">
               <button className="w-8 h-8 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-500 hover:bg-gray-50 transition-colors shadow-sm">
@@ -218,14 +164,15 @@ export default function HomePage() {
                 <ChevronRight />
               </button>
             </div>
-          </div>
-          <div className="grid grid-cols-3 gap-4">
-            {watchCards.map((c) => <WatchCard key={c.title} {...c} />)}
-          </div>
+          </div> */}
+          
+
+          {/* Courses Section */}
+          <CoursesSection />
         </main>
 
         {/* ── Right Panel ── */}
-        <RightPanel mentors={mentors}/>
+        <RightPanel />
       </div>
     </div>
   );

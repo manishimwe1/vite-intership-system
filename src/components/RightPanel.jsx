@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/useAuth";
 import React from "react";
 
 const DotsIcon = () => (
@@ -13,7 +14,7 @@ const PlusIcon = () => (
 );
 
 // ─── Circular Progress ────────────────────────────────────────────────────────
-const CircularProgress = ({ pct = 32 }) => {
+const CircularProgress = ({ pct = 32,user }) => {
   const r = 52;
   const circ = 2 * Math.PI * r;
   const dash = (pct / 100) * circ;
@@ -27,7 +28,8 @@ const CircularProgress = ({ pct = 32 }) => {
       {/* Avatar */}
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="w-20 h-20 rounded-full bg-gradient-to-br from-amber-200 to-orange-300 flex items-center justify-center overflow-hidden border-4 border-white shadow-md">
-          <span className="text-3xl">🧑‍💻</span>
+                     <img src={user?.image } alt="avatar" className="w-6 h-6 rounded-full" />
+
         </div>
       </div>
       {/* Badge */}
@@ -74,29 +76,35 @@ const BarChart = () => {
   );
 };
 
-function RightPanel({mentors}) {
+function RightPanel() {
+  const {user} = useAuth();
+ const mentors = [
+    { name: user?.name,  role: "Full stack",     emoji: "👨‍🎨", color: "bg-rose-100"   },
+    // { name: "Sara Kim",     role: "Brand Strategist", emoji: "👩‍💼", color: "bg-amber-100" },
+  ];
+  
   return (
     <aside className="w-72 shrink-0 overflow-y-auto px-5 pt-6 py-30 border-l border-gray-100 bg-white">
       {/* Statistics */}
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-base font-bold text-gray-900">Statistic</h3>
-        <button className="text-gray-300 hover:text-gray-500">
-          <DotsIcon />
-        </button>
-      </div>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-base font-bold text-gray-900">Statistic</h3>
+          <button className="text-gray-300 hover:text-gray-500">
+            <DotsIcon />
+          </button>
+        </div>
 
-      <CircularProgress pct={32} />
+        <CircularProgress pct={32} user={user} />
 
-      <div className="text-center mt-4 mb-1">
-        <p className="text-base font-bold text-gray-900">
-          Good Morning Jason 🔥
-        </p>
-        <p className="text-xs text-gray-400 mt-1">
-          Continue your learning to achieve your target!
-        </p>
-      </div>
+        <div className="text-center mt-4 mb-1">
+          <p className="text-base font-bold text-gray-900">
+            {new Date().getHours() < 12 ? "Good Morning" : "Good Afternoon"} {user?.name} 🔥
+          </p>
+          <p className="text-xs text-gray-400 mt-1">
+            Continue your learning to achieve your target!
+          </p>
+        </div>
 
-      {/* Y-axis labels + bar chart */}
+        {/* Y-axis labels + bar chart */}
       <div className="mt-5 bg-gray-50 rounded-2xl p-4">
         <div className="flex gap-2">
           {/* Y labels */}

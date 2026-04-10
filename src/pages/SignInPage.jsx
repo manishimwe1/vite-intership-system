@@ -17,7 +17,7 @@ export default function SignInPage() {
     try {
       const res = await signInWithEmail(email, password);
       if (res.ok) {
-        navigate("/dashboard"); // change to your protected route
+        navigate("/"); // Redirect to home/dashboard after successful login
       } else {
         setError("Invalid email or password.");
       }

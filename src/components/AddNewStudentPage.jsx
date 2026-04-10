@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { useNavigate } from "react-router-dom";
 
-const AddStudentDialog = ({open, setOpen}) => {
+const AddStudentDialog = ({open,setOpen}) => {
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
@@ -19,7 +19,10 @@ const AddStudentDialog = ({open, setOpen}) => {
   const handleSubmitStudents = async (e) => {
     e.preventDefault();
 
-    const newStudent = { name, email, role, github };
+    const newStudent = {
+      name,email,role,github
+    }
+
 
     try {
       const response = await fetch("/api/students", {
@@ -34,16 +37,13 @@ const AddStudentDialog = ({open, setOpen}) => {
         throw new Error("Failed to add student");
       }
 
-      // ✅ Clear form
       setName("");
       setEmail("");
       setRole("");
       setGithub("");
 
-      // ✅ Close dialog
       setOpen(false);
-      navigate(0); // Redirect to student list after adding
-
+      navigate(0); 
     } catch (error) {
       console.log(error);
     }

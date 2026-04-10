@@ -1,6 +1,5 @@
 import AddStudentDialog from "@/components/AddNewStudentPage";
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -19,7 +18,7 @@ const StudentPage = () => {
   const [allInterns, setAllInterns] = useState();
   const navigate = useNavigate();
 
-  useState(() => {
+  useEffect(() => {
     const fetchInterns = async () => {
       try {
         const response = await fetch("/api/students");
